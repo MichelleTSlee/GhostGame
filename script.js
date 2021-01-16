@@ -38,6 +38,7 @@ var crystal = {
 
 var pScore = 0, gScore = 0, ghost = false, power = false;
 
+
 //KeyClick Listeners
 var keyClick = {};
 document.addEventListener("keydown", function(event){
@@ -124,6 +125,9 @@ function checkReady(){
      enemy.speed = myNum(2) + 1; //Could be 0 otherwise. Even when I increased to 4. This random number gives random change of direction too.
      enemy.dirx = 0;
      enemy.diry = 0;
+     if(player.fury){enemy.speed = enemy.speed/3 * -1; console.log(player.fury);}
+
+
      if(enemy.moving % 2){ //Even
        if(player.x < enemy.x){
          enemy.dirx = -enemy.speed; // eg -1
@@ -150,9 +154,11 @@ function checkReady(){
    if(enemy.y > canvas.height-32){enemy.y = 0};
    if(enemy.y < 0){enemy.y = canvas.height-32};
 
-   //Collision Detection
-   if(player.x <= crystal.x && crystal.x <= (player.x + 30) && player.y <= crystal.y && crystal.y <= (player.y + 30)){
-     console.log ("Collision");
+   //Collision Detection Crystal
+   if (player.x <= (crystal.x + 13) && crystal.x <= (player.x + 13) && player.y <= (crystal.y + 13) && crystal.y <= (player.y + 13)) {
+     console.log("Crystal x" + crystal.x);
+     console.log("Crystal y" + crystal.y);
+     console.log ("Collision : " + "x " + player.x +  " y " + player.y);
      crystal.countdown = 500;
      player.fury = true;//Can kill & can't be killed. Change player image.
      crystal.x = -20;
@@ -162,8 +168,40 @@ function checkReady(){
 
       if(crystal.countdown > 0){
         crystal.countdown--;
-        console.log(crystal.countdown);
-       }
+      } else {
+        player.fury = false;
+      }
+
+
+      //Collision Detection Enemy
+      if (player.x <= (enemy.x + 13) && enemy.x <= (player.x + 13) && player.y <= (enemy.y + 13) && enemy.y <= (player.y + 13)) {
+        if(player.fury){
+          pScore++
+        }else {
+          gScore++
+        }
+        player.x = 0;
+        player.y = 100;
+        enemy.x = 200;
+        enemy.y = 300;
+      }
+
+        //   canScore = false
+        //   setTimeout(delay, 5000);
+        // } else if (canScore && !player.fury){
+        //   gScore++;
+        //   canScore = false;
+        //   setTimeout(delay, 5000);
+        //   }
+        // }
+        //
+        //  function delay(){
+        //    canScore = true;
+        //  }
+
+
+
+
 
 
 
@@ -209,10 +247,10 @@ function checkReady(){
    }
 
 
-   if(player.x > canvas.width-32){player.x = 0};
-   if(player.x < 0){player.x = canvas.width-32};
-   if(player.y > canvas.height-32){player.y = 0};
-   if(player.y < 0){player.y = canvas.height-32};
+   if(player.x > canvas.width-16){player.x = 0};
+   if(player.x < 0){player.x = canvas.width-16};
+   if(player.y > canvas.height-16){player.y = 0};
+   if(player.y < 0){player.y = canvas.height-16};
 
    render();
 
@@ -222,5 +260,4 @@ function checkReady(){
    power = true;
    render();
  }
-
 }
